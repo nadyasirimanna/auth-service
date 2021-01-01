@@ -1,37 +1,46 @@
 apiVersion: apps/v1
 kind: Deployment
-metadata:  
-  name: nodejs-deployment  
-  labels:    
-    app: helloworld
-spec:  
-  replicas: 1  
-  selector:    
+metadata:
+  labels:
+    app: auth-service
+  name: auth-service
+  namespace: default
+spec:
+  replicas: 3
+  selector:
     matchLabels:
-      app: helloworld
+      app: auth-service
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
   template:
     metadata:
       labels:
-        app: helloworld
-    spec: 
-     containers:
-      - name: helloworld
-        image: nadyasi/nodejs-helloworld:latest
-        ports:
-        - containerPort: 5000
+        app: auth-service
+    spec:
+      containers:
+        - image: gcr.io/auth-api-300416/github.com/nadyasirimanna/auth-service
+          imagePullPolicy: IfNotPresent
+          name: auth-service-1
 ---
-apiVersion: v1
-kind: Service
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
 metadata:
-  name: nodejs-service
   labels:
-    app: helloworld
+    app: auth-service
+  name: auth-service-hpa-kiv1
+  namespace: default
 spec:
-  type: NodePort
-  ports:
-  - port: 5000
-    protocol: TCP
-    targetPort: 5000
-    nodePort: 32700
-  selector:
-    app: helloworld
+  maxReplicas: 5
+  metrics:
+    - resource:
+        name: cpu
+        targetAverageUtilization: 80
+      type: Resource
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: auth-service
