@@ -41,7 +41,11 @@ app.post('/auth-service/auth', async (req, res) => {
   console.log(`Auth: Authorizing user: ${userId}`);
 
   if (!user) {
-    res.status(403).send('Access Denied.');
+    res.status(403).json({
+      statusCode: 403,
+      statusMessage: 'Access Denied',
+      data: []
+    });
     return;
   }
   let token;
@@ -59,3 +63,5 @@ app.post('/auth-service/auth', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Listening on ${PORT}`);
 });
+
+module.exports = app;

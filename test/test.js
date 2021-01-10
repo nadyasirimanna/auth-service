@@ -1,7 +1,18 @@
-describe('Auth', function () {
-    describe('#indexOf()', function () {
-      it('should return -1 when the value is not present', function () {
-        // assert.equal([1, 2, 3].indexOf(4), -1);
+const supertest = require("supertest");
+const should = require("should");
+
+const server = supertest.agent("http://34.123.190.106");
+
+describe("Auth unit test",function(){
+    it("Auth",function(done){
+      server
+      .post('/auth-service/auth')
+      .send({userId : 'admin2', password : ''})
+      .expect(403)
+      .end(function(err,res){
+        res.status.should.equal(403);
+        done();
       });
     });
+  
   });
