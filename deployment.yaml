@@ -21,7 +21,7 @@ spec:
         app: auth-service-dev
     spec:
       containers:
-        - image: gcr.io/auth-api-300416/github.com/nadyasirimanna/auth-service
+        - image: gcr.io/auth-api-300416/github.com/nadyasirimanna/auth-service-dev
           imagePullPolicy: IfNotPresent
           name: auth-service-1
 ---
