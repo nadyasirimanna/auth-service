@@ -16,7 +16,7 @@ dbClient.connect(err => {
 });
 
 app.get('/', function (req, res) {
-  res.send('Auth Service')
+  res.send('Auth Service dev')
 })
 
 const privateKey = fs.readFileSync(path.join(__dirname, 'private.key'));
