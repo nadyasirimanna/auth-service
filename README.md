@@ -1,2 +1,2 @@
 # auth-service
-auth-service
+Auth Service
