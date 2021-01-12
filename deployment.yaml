@@ -2,14 +2,14 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: auth-service-dev
-  name: auth-service-dev
+    app: auth-service
+  name: auth-service
   namespace: default
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
-      app: auth-service-dev
+      app: auth-service
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -18,10 +18,10 @@ spec:
   template:
     metadata:
       labels:
-        app: auth-service-dev
+        app: auth-service
     spec:
       containers:
-        - image: gcr.io/auth-api-300416/github.com/nadyasirimanna/auth-service-dev
+        - image: gcr.io/auth-api-300416/github.com/nadyasirimanna/auth-service
           imagePullPolicy: IfNotPresent
           name: auth-service-1
 ---
@@ -29,8 +29,8 @@ apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   labels:
-    app: auth-service-dev
-  name: auth-service-dev-hpa-iabs
+    app: auth-service
+  name: auth-service-hpa-kiv1
   namespace: default
 spec:
   maxReplicas: 5
@@ -43,26 +43,4 @@ spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: auth-service-dev
----
-apiVersion: v1
-kind: Service
-metadata:
-  finalizers:
-    - service.kubernetes.io/load-balancer-cleanup
-  labels:
-    app: auth-service-dev
-  name: auth-service-dev-service
-  namespace: default
-spec:
-  clusterIP: 10.0.0.140
-  externalTrafficPolicy: Cluster
-  ports:
-    - nodePort: 31942
-      port: 80
-      protocol: TCP
-      targetPort: 4000
-  selector:
-    app: auth-service-dev
-  sessionAffinity: None
-  type: LoadBalancer
+    name: auth-service
